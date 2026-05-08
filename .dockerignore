@@ -1,0 +1,25 @@
+node_modules
+.next
+out
+build
+coverage
+
+.git
+.gitignore
+.vscode
+
+*.log
+*.md
+AGENTS.md
+CLAUDE.md
+eslint.config.mjs
+postcss.config.mjs
+
+# env files — injected at runtime
+.env
+.env.*
+!.env.example
+
+# Docker files themselves
+Dockerfile
+.dockerignore
