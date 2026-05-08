@@ -22,18 +22,16 @@ WORKDIR /app
 COPY .yarnrc       ./
 COPY package.json  yarn.lock ./
 
-# --ignore-optional: skip @next/swc-* and lightningcss-win32-* native binaries
-# --ignore-engines:  camera-controls@3.1.2 requires Node >=22
-# --force:           bypass integrity mismatches in restricted CI
-# --cache-folder:    use fresh /tmp cache — avoids EUCLEAN (-117) corruption
-#                    in the shared /usr/local/share/.cache/yarn/v6/ on CI hosts
-RUN yarn install \
+# The CI overlay2 filesystem has I/O errors on /tmp (different layer).
+# Using /app/.yarn-cache (same layer as node_modules) avoids this.
+RUN mkdir -p /app/.yarn-cache && \
+    yarn install \
       --ignore-optional \
       --ignore-engines \
       --force \
       --network-timeout 300000 \
-      --cache-folder /tmp/.yarn-cache \
- && rm -rf /tmp/.yarn-cache
+      --cache-folder /app/.yarn-cache && \
+    rm -rf /app/.yarn-cache
 
 
 # ── Stage 2 · builder ─────────────────────────────────────────────────────────
