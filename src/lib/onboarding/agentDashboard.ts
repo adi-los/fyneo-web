@@ -1,7 +1,6 @@
 import { getAccessToken } from '../auth';
+import { getGateway } from '../config';
 import type { AgentDashboardResponse } from './types';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 function authHeaders(): Record<string, string> {
   const token = getAccessToken();
@@ -12,6 +11,7 @@ function authHeaders(): Record<string, string> {
 }
 
 export async function fetchAgentDashboard(date: string): Promise<AgentDashboardResponse> {
+  const API_URL = await getGateway();
   const res = await fetch(`${API_URL}/onboarding/agent-dashboard?date=${date}`, {
     headers: authHeaders(),
   });

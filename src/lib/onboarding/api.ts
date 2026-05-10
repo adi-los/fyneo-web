@@ -1,7 +1,6 @@
 import { getAccessToken } from '../auth';
+import { getGateway } from '../config';
 import type { PaginatedResponse, QueryParams } from './types';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 function authHeaders(): Record<string, string> {
   const token = getAccessToken();
@@ -19,6 +18,7 @@ function buildQuery(params: QueryParams): string {
 }
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const API_URL = await getGateway();
   const res = await fetch(`${API_URL}${path}`, {
     method,
     headers: authHeaders(),

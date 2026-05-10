@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import { getGateway } from './config';
 
 export interface AuthUser {
   id: string;
@@ -16,6 +16,7 @@ export interface LoginResponse {
 }
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
+  const API_URL = await getGateway();
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -36,6 +37,7 @@ export async function refreshTokens(): Promise<{ accessToken: string; refreshTok
   const token = getRefreshToken();
   if (!token) throw new Error('No refresh token');
 
+  const API_URL = await getGateway();
   const res = await fetch(`${API_URL}/auth/refresh`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -54,6 +56,7 @@ export async function refreshTokens(): Promise<{ accessToken: string; refreshTok
 }
 
 export async function getMe(): Promise<AuthUser> {
+  const API_URL = await getGateway();
   const token = getAccessToken();
   const res = await fetch(`${API_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -63,6 +66,7 @@ export async function getMe(): Promise<AuthUser> {
 }
 
 export async function getUsers(): Promise<AuthUser[]> {
+  const API_URL = await getGateway();
   const token = getAccessToken();
   const res = await fetch(`${API_URL}/users`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -72,6 +76,7 @@ export async function getUsers(): Promise<AuthUser[]> {
 }
 
 export async function getOrganizations() {
+  const API_URL = await getGateway();
   const token = getAccessToken();
   const res = await fetch(`${API_URL}/organizations`, {
     headers: { Authorization: `Bearer ${token}` },
